@@ -49,7 +49,7 @@ public final class ProdutoDAOSQLite implements ProdutoDAO {
             stmt.setDouble(4, produto.getPrecoVenda());
             stmt.executeUpdate();
         } catch (SQLException e) {
-            throw new RuntimeException("Erro ao atualizar usuário: " + e.getMessage());
+            throw new RuntimeException("Erro ao atualizar produto: " + e.getMessage());
         }   
     }
 
@@ -80,7 +80,7 @@ public final class ProdutoDAOSQLite implements ProdutoDAO {
                 produtosCollections.adicionarProduto(Produto);
             }
         } catch (SQLException e) {
-            throw new IllegalStateException("Erro ao criar a tabela: " + e.getMessage());
+            throw new IllegalStateException("Erro ao resgatar um produto: " + e.getMessage());
         } 
         
         return produtosCollections.getProdutos();
@@ -100,7 +100,7 @@ public final class ProdutoDAOSQLite implements ProdutoDAO {
                 }
             }
         } catch (SQLException e) {
-            throw new RuntimeException("Erro ao buscar usuário pelo nome: " + e.getMessage());
+            throw new RuntimeException("Erro ao buscar produto pelo id: " + e.getMessage());
         }
     }
 
@@ -118,7 +118,7 @@ public final class ProdutoDAOSQLite implements ProdutoDAO {
                 }
             }
         } catch (SQLException e) {
-            throw new RuntimeException("Erro ao buscar usuário pelo nome: " + e.getMessage());
+            throw new RuntimeException("Erro ao buscar produto pelo nome: " + e.getMessage());
         }
     }
   
