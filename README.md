@@ -1,10 +1,14 @@
-# Sistema De Controle De Produtos
+# MVP - Sistema De Controle De Produtos
 
 ## 🎯 Objetivo
 
-O projeto implementa uma arquitetura MVP (Model-View-Presenter).
-Sistema para controle de estoque e gestão de produtos.
-A implementação atende aos princípios de design orientado a objetos e utiliza Java 17 e Maven.
+- O projeto implementa uma arquitetura MVP (Model-View-Presenter).
+- Sistema para controle de estoque e gestão de produtos.
+- A implementação atende aos princípios de design orientado a objetos e utiliza Java 17 e Maven.
+
+## Funcionalidades atuais
+
+- Inclusão de produtos
 
 ## 📐 Diagrama de classes
 

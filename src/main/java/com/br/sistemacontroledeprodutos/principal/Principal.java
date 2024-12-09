@@ -8,7 +8,9 @@ import com.br.sistemacontroledeprodutos.presenter.CadastroProdutoPresenter;
 public class Principal {
 
     public static void main(String[] args) {
-        new CadastroProdutoPresenter();     
+   
+        new CadastroProdutoPresenter();  
+       
     }
     
 }

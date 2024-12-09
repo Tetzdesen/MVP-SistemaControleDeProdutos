@@ -16,29 +16,39 @@ public final class SQLiteConnectionSingleton {
     private static final String URL = "jdbc:sqlite:db/estoque.db";
     
     private SQLiteConnectionSingleton(){
+
         try {
-            this.connectionSQLite = DriverManager.getConnection(URL);
-            System.out.println("Conexão com o banco de dados SQLite estabelicida ");
-            createRegistroTable();
+            if (connectionSQLite == null || connectionSQLite.isClosed()) {
+                try {
+                    connectionSQLite = DriverManager.getConnection(URL);
+                } catch (SQLException ex) {
+                    Logger.getLogger(SQLiteConnectionSingleton.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                System.out.println("Conexão com o banco de dados SQLite estabelecida.");
+                criarTabelaProduto();
+            }
         } catch (SQLException ex) {
             Logger.getLogger(SQLiteConnectionSingleton.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
-    public static SQLiteConnectionSingleton getInstance(){
-        if(singleInstance == null){
-            singleInstance = new SQLiteConnectionSingleton();
+
+    public static SQLiteConnectionSingleton getInstance() {
+        if (singleInstance == null) {
+            synchronized (SQLiteConnectionSingleton.class) {
+                if (singleInstance == null) {
+                    singleInstance = new SQLiteConnectionSingleton();
+                }
+            }
         }
-        
         return singleInstance;
-    } 
+    }
     
     
     public Connection getConnection(){
-            return connectionSQLite;      
+        return connectionSQLite;      
     }
     
-    private void createRegistroTable() {
+    private void criarTabelaProduto() {
         String sql = """
                      CREATE TABLE IF NOT EXISTS produto (
                          idProduto INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -66,4 +76,15 @@ public final class SQLiteConnectionSingleton {
             throw new IllegalStateException("Erro ao criar a tabela: " + e.getMessage());
         }     
     }    
+    
+     public void closeConnection() {
+        if (connectionSQLite != null) {
+            try {
+                connectionSQLite.close();
+                System.out.println("Conexão SQLite fechada.");
+            } catch (SQLException ex) {
+                System.out.println("Erro ao fechar conexão SQLite.");
+            }
+        }
+    }
 }

@@ -122,7 +122,7 @@ public final class ProdutoDAOSQLite implements ProdutoDAO {
         }
     }
   
-     private Produto converterResultSetParaProduto(ResultSet rs) throws SQLException {
+    private Produto converterResultSetParaProduto(ResultSet rs) throws SQLException {
          
         String nome = rs.getString("nome");
         double precoCusto = rs.getDouble("precoCusto");
