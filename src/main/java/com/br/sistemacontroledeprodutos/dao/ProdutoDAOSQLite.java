@@ -1,7 +1,7 @@
-package com.br.sistemacontroledeprodutos.DAO;
+package com.br.sistemacontroledeprodutos.dao;
 
-import com.br.sistemacontroledeprodutos.singleton.SQLiteConnectionSingleton;
 import com.br.sistemacontroledeprodutos.model.Produto;
+import com.br.sistemacontroledeprodutos.singleton.SQLiteConnectionSingleton;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -127,8 +127,7 @@ public final class ProdutoDAOSQLite implements ProdutoDAO {
         String nome = rs.getString("nome");
         double precoCusto = rs.getDouble("precoCusto");
         double percentualLucro = rs.getDouble("percentualLucro");
-   
-        
+
         return new Produto(nome, precoCusto, percentualLucro);
     }
 

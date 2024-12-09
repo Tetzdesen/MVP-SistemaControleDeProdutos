@@ -1,4 +1,4 @@
-package com.br.sistemacontroledeprodutos.DAO;
+package com.br.sistemacontroledeprodutos.dao;
 
 import com.br.sistemacontroledeprodutos.model.Produto;
 import java.util.ArrayList;

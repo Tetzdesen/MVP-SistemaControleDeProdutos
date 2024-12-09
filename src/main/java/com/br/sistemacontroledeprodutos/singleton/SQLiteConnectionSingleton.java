@@ -64,8 +64,6 @@ public final class SQLiteConnectionSingleton {
             }
         } catch (SQLException e) {
             throw new IllegalStateException("Erro ao criar a tabela: " + e.getMessage());
-        }
-        
-    }
-    
+        }     
+    }    
 }
