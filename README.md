@@ -6,7 +6,7 @@
 - Sistema para controle de estoque e gestão de produtos.
 - A implementação atende aos princípios de design orientado a objetos e utiliza Java 17 e Maven.
 
-## Funcionalidades atuais
+## 🛠️ Funcionalidades atuais
 
 - Inclusão de produtos
 
