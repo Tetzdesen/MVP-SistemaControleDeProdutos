@@ -5,11 +5,12 @@ package com.br.sistemacontroledeprodutos.model;
  * @author tetzner
  */
 public final class Produto {
+
     private String nome;
     private double precoCusto;
     private double percentualLucro;
     private double precoVenda;
-    
+
     public Produto(String nome, double precoCusto, double percentualLucro) {
         this.nome = nome;
         this.precoCusto = precoCusto;
@@ -48,7 +49,7 @@ public final class Produto {
     public void setPrecoVenda(double precoVenda) {
         this.precoVenda = precoVenda;
     }
-    
+
     public double calcularPrecoVenda() {
         return precoCusto + (precoCusto * percentualLucro / 100);
     }

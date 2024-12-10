@@ -87,7 +87,7 @@ public class InclusaoProdutoView extends javax.swing.JFrame {
         txtPrecoVenda.setEditable(false);
         txtPrecoVenda.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
 
-        btnIncluir.setText("Cadastrar Produto");
+        btnIncluir.setText("Incluir Produto");
         btnIncluir.setToolTipText("");
 
         btnCancelar.setText("Cancelar");

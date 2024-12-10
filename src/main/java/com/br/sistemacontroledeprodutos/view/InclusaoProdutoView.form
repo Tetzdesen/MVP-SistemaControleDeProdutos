@@ -150,7 +150,7 @@
     </Component>
     <Component class="javax.swing.JButton" name="btnIncluir">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Cadastrar Produto"/>
+        <Property name="text" type="java.lang.String" value="Incluir Produto"/>
         <Property name="toolTipText" type="java.lang.String" value=""/>
       </Properties>
     </Component>

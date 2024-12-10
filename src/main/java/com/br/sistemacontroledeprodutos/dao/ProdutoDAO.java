@@ -9,17 +9,17 @@ import java.util.Optional;
  * @author tetzner
  */
 public interface ProdutoDAO {
-    
+
     void inserirProduto(Produto produto);
-       
+
     void atualizarProduto(Produto produto);
-    
+
     void deletarProdutoPorNome(String nomeProduto);
-    
+
     List<Produto> listarProdutos();
-    
+
     Optional<Produto> buscarProdutoPorId(String idProduto);
-    
+
     Optional<Produto> buscarProdutoPorNome(String nomeProduto);
-    
+
 }

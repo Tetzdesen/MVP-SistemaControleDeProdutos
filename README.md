@@ -1,4 +1,4 @@
-# MVP - Sistema De Controle De Produtos
+# Sistema De Controle De Produtos
 
 ## 🎯 Objetivo
 
@@ -14,7 +14,7 @@
 
 O diagrama de classes podem ser encontrado na pasta `/diagramaclasses` [(Clique aqui)](diagramaclasses/).
 
-![Diagrama de Classes](diagramaclasses/Delivery%20System%20Diagrama%20de%20Classes%20de%20Projeto.svg)
+![Diagrama de Classes](diagramaclasses/SistemaControledeProdutos.svg)
 
 ## 📋 Requisitos
 - **Linguagem**: Java 17.
