@@ -1,5 +1,7 @@
 # Sistema De Controle De Produtos
 
+Sistema para controle de estoque e gestão de produtos.
+
 ## 🎯 Objetivo
 
 - O projeto implementa uma arquitetura MVP (Model-View-Presenter).

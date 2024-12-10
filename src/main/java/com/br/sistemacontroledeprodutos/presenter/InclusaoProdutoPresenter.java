@@ -45,8 +45,8 @@ public final class InclusaoProdutoPresenter {
 
         try {
             javax.swing.UIManager.setLookAndFeel(javax.swing.UIManager.getSystemLookAndFeelClassName());
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(null, ex.getMessage());
         }
 
         this.view.getBtnIncluir().addActionListener(new ActionListener() {
