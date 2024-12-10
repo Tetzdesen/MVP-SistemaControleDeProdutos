@@ -1,6 +1,7 @@
 package com.br.sistemacontroledeprodutos.principal;
 
-import com.br.sistemacontroledeprodutos.presenter.CadastroProdutoPresenter;
+import com.br.sistemacontroledeprodutos.presenter.InclusaoProdutoPresenter;
+
 /**
  *
  * @author tetzner
@@ -8,9 +9,7 @@ import com.br.sistemacontroledeprodutos.presenter.CadastroProdutoPresenter;
 public class Principal {
 
     public static void main(String[] args) {
-   
-        new CadastroProdutoPresenter();  
-       
+        new InclusaoProdutoPresenter();
     }
-    
+
 }

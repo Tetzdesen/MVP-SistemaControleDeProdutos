@@ -3,11 +3,18 @@ package com.br.sistemacontroledeprodutos.presenter;
 import com.br.sistemacontroledeprodutos.dao.ProdutoCollection;
 import com.br.sistemacontroledeprodutos.model.Produto;
 import com.br.sistemacontroledeprodutos.dao.ProdutoDAOSQLite;
-import com.br.sistemacontroledeprodutos.view.CadastroProdutoView;
+import com.br.sistemacontroledeprodutos.singleton.SQLiteConnectionSingleton;
+import com.br.sistemacontroledeprodutos.view.InclusaoProdutoView;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.text.ParseException;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.JTextArea;
 
@@ -15,61 +22,77 @@ import javax.swing.JTextArea;
  *
  * @author tetzner
  */
-public final class CadastroProdutoPresenter {
+public final class InclusaoProdutoPresenter {
+
     private final ProdutoDAOSQLite sqliteDB;
     private final ProdutoCollection produtos;
-    private final CadastroProdutoView view;
+    private final InclusaoProdutoView view;
 
-    public CadastroProdutoPresenter() {
-        
+    public InclusaoProdutoPresenter() {
+
         sqliteDB = new ProdutoDAOSQLite();
-        
+
         produtos = new ProdutoCollection();
-        
-        this.view = new CadastroProdutoView();
-        
+
+        this.view = new InclusaoProdutoView();
+
         configuraView();
     }
-    
-    private void configuraView(){
-        
+
+    private void configuraView() {
+
         this.view.setVisible(false);
-        
+
         try {
             javax.swing.UIManager.setLookAndFeel(javax.swing.UIManager.getSystemLookAndFeelClassName());
         } catch (Exception e) {
             e.printStackTrace();
         }
-        
+
         this.view.getBtnIncluir().addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                try{
-                   salvar();
-                } catch (Exception ex){
+                try {
+                    salvar();
+                } catch (Exception ex) {
                     JOptionPane.showMessageDialog(null, ex.getMessage());
                 }
             }
         });
-        
+
         this.view.getBtnCancelar().addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 cancelar();
             }
         });
-        
+
+        // Evento para fechar o banco de dados ao encerrar a interface
+        this.view.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+
+                Connection conn;
+                try {
+                    conn = SQLiteConnectionSingleton.getInstance().getConnection();
+                    SQLiteConnectionSingleton.getInstance().closeConnection(conn);
+                } catch (SQLException ex) {
+                    Logger.getLogger(InclusaoProdutoPresenter.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        });
+
         view.setLocationRelativeTo(null);
-        
+
         view.setVisible(true);
-            
+
         atualizarListaProdutos();
     }
-    
-    private void salvar() throws Exception{
-        
-        try{
-    
+
+    private void salvar() throws Exception {
+
+        try {
+
             String nome = view.getTxtNome().getText();
 
             double precoCusto = Double.parseDouble(view.getTxtPrecoCusto().getText());
@@ -81,57 +104,55 @@ public final class CadastroProdutoPresenter {
             Produto produto = new Produto(nome, precoCusto, percentualLucro);
 
             produtos.adicionarProduto(produto);
-            
+
             sqliteDB.inserirProduto(produto);
 
             JOptionPane.showMessageDialog(view, "Produto incluido com sucesso");
-            
+
             atualizarListaProdutos();
-            
+
             limparCampos();
-            
+
             System.out.println(produtos.getProdutos().toString());
-        }
-        catch(ParseException | NumberFormatException erroDeDados){
+        } catch (ParseException | NumberFormatException erroDeDados) {
             JOptionPane.showMessageDialog(view, "Favor informar dados válidos!" + erroDeDados);
-        }
-        catch(IllegalArgumentException erro){
-            JOptionPane.showMessageDialog(view,erro.getMessage());
+        } catch (IllegalArgumentException erro) {
+            JOptionPane.showMessageDialog(view, erro.getMessage());
         }
 
     }
-    
-    private void cancelar(){
+
+    private void cancelar() {
         view.dispose();
     }
-    
-    private void verificarCampos(String nome, double precoCusto, double percentualLucro) throws Exception{
-        
-        if(nome == null || nome.isEmpty()){
+
+    private void verificarCampos(String nome, double precoCusto, double percentualLucro) throws Exception {
+
+        if (nome == null || nome.isEmpty()) {
             throw new Exception("Nome do produto é obrigatório ");
         }
-        
-        if(precoCusto <= 0){
+
+        if (precoCusto <= 0) {
             throw new Exception("Preço de custo deve ser maior que zero ");
         }
-        
-        if(percentualLucro <= 0){
+
+        if (percentualLucro <= 0) {
             throw new Exception("Percentual de lucro deve ser maior que zero ");
         }
-        
+
     }
-     
-    private void limparCampos(){
-        
+
+    private void limparCampos() {
+
         this.view.getTxtNome().setText("");
         this.view.getTxtPrecoCusto().setText("");
         this.view.getTxtPercentualLucro().setText("");
         this.view.getTxtPrecoVenda().setText("");
-        
+
     }
-    
+
     private void atualizarListaProdutos() {
-        
+
         List<Produto> produtosCadastrados = sqliteDB.listarProdutos();
         JTextArea areaProdutos = view.getTxtAreaProdutos();
 
@@ -141,23 +162,23 @@ public final class CadastroProdutoPresenter {
         try {
             int id = 0;
 
-            areaProdutos.append(String.format("%-8s %-25s %-20s %-25s %-20s\n", 
-                "ID", "Nome", "Preço de Custo", "Percentual de Lucro", "Preço de Venda"));
-            areaProdutos.append("-------------------------------------------------------------------------------------------------------\n");
+            areaProdutos.append(String.format("%-8s %-25s %-20s %-25s %-20s\n",
+                    "ID", "Nome", "Preço de Custo", "Percentual de Lucro", "Preço de Venda"));
+            areaProdutos.append("---------------------------------------------------------------------------------------------------------\n");
 
             for (Produto produto : produtosCadastrados) {
                 areaProdutos.append(String.format("%-8d %-25s %-20.2f %-25s %-20.2f\n",
-                    ++id,
-                    produto.getNome(),
-                    produto.getPrecoCusto(),
-                    String.format("%.2f %%", produto.getPercentualLucro()), // Adiciona o símbolo de %
-                    produto.getPrecoVenda()
+                        ++id,
+                        produto.getNome(),
+                        produto.getPrecoCusto(),
+                        String.format("%.2f %%", produto.getPercentualLucro()), // Adiciona o símbolo de %
+                        produto.getPrecoVenda()
                 ));
             }
         } catch (IllegalArgumentException erroArrayVazio) {
             JOptionPane.showMessageDialog(view, erroArrayVazio.getMessage());
         }
-        
+
     }
-    
+
 }

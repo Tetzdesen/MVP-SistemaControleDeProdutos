@@ -3,87 +3,58 @@ package com.br.sistemacontroledeprodutos.singleton;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-/**
- *
- * @author tetzner
- */
-public final class SQLiteConnectionSingleton {
-    
-    private static SQLiteConnectionSingleton singleInstance = null;
-    private Connection connectionSQLite;
-    private static final String URL = "jdbc:sqlite:db/estoque.db";
-    
-    private SQLiteConnectionSingleton(){
 
-        try {
-            if (connectionSQLite == null || connectionSQLite.isClosed()) {
-                try {
-                    connectionSQLite = DriverManager.getConnection(URL);
-                } catch (SQLException ex) {
-                    Logger.getLogger(SQLiteConnectionSingleton.class.getName()).log(Level.SEVERE, null, ex);
-                }
-                System.out.println("Conexão com o banco de dados SQLite estabelecida.");
-                criarTabelaProduto();
-            }
-        } catch (SQLException ex) {
-            Logger.getLogger(SQLiteConnectionSingleton.class.getName()).log(Level.SEVERE, null, ex);
-        }
+public final class SQLiteConnectionSingleton {
+
+    private static volatile SQLiteConnectionSingleton singleInstance = null;
+    private static final String URL = "jdbc:sqlite:db/produtos.db";
+
+    private SQLiteConnectionSingleton() {
+
     }
 
     public static SQLiteConnectionSingleton getInstance() {
-        if (singleInstance == null) {
+        SQLiteConnectionSingleton instance = SQLiteConnectionSingleton.singleInstance;
+        if (instance == null) {
             synchronized (SQLiteConnectionSingleton.class) {
-                if (singleInstance == null) {
-                    singleInstance = new SQLiteConnectionSingleton();
+                instance = SQLiteConnectionSingleton.singleInstance;
+                if (instance == null) {
+                    SQLiteConnectionSingleton.singleInstance = instance = new SQLiteConnectionSingleton();
                 }
             }
         }
-        return singleInstance;
+        return instance;
     }
-    
-    
-    public Connection getConnection(){
-        return connectionSQLite;      
+
+    public Connection getConnection() throws SQLException {
+        Connection conn = DriverManager.getConnection(URL);
+        criarTabelaProduto(conn);
+        return conn;
     }
-    
-    private void criarTabelaProduto() {
+
+    private void criarTabelaProduto(Connection conn) throws SQLException {
         String sql = """
-                     CREATE TABLE IF NOT EXISTS produto (
-                         idProduto INTEGER PRIMARY KEY AUTOINCREMENT,
-                         nome VARCHAR(200) NOT NULL,
-                         precoCusto DOUBLE NOT NULL,
-                         percentualLucro DOUBLE NOT NULL,
-                         precoVenda DOUBLE NOT NULL
-                     );""";
+            CREATE TABLE IF NOT EXISTS produto (
+                idProduto INTEGER PRIMARY KEY AUTOINCREMENT,
+                nome VARCHAR(200) NOT NULL,
+                precoCusto DOUBLE NOT NULL,
+                percentualLucro DOUBLE NOT NULL,
+                precoVenda DOUBLE NOT NULL
+            );
+        """;
 
-        try {
-            
-            if (connectionSQLite != null && !connectionSQLite.isClosed()) {
+        try (var stmt = conn.createStatement()) {
+            stmt.execute(sql);
+        }
+    }
 
-                var metaData = connectionSQLite.getMetaData();
-                var tables = metaData.getTables(null, null, "produto", new String[] { "TABLE" });
-
-                if (!tables.next()) {
-                    connectionSQLite.createStatement().execute(sql);
-                    System.out.println("Tabela criada com sucesso!");
-                } else {
-                    System.out.println("Tabela já existe, nenhuma criação necessária.");
-                }
-            }
-        } catch (SQLException e) {
-            throw new IllegalStateException("Erro ao criar a tabela: " + e.getMessage());
-        }     
-    }    
-    
-     public void closeConnection() {
-        if (connectionSQLite != null) {
+    public void closeConnection(Connection conn) {
+        if (conn != null) {
             try {
-                connectionSQLite.close();
+                conn.close();
                 System.out.println("Conexão SQLite fechada.");
             } catch (SQLException ex) {
-                System.out.println("Erro ao fechar conexão SQLite.");
+                System.err.println("Erro ao fechar conexão SQLite: " + ex.getMessage());
             }
         }
     }
